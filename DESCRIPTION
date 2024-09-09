@@ -13,4 +13,9 @@ Imports:
     ausplotsR,
     data.table,
     sp,
-    terra
+    terra,
+    weatherOz
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
