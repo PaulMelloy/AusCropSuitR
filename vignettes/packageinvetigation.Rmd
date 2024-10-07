@@ -1,0 +1,39 @@
+---
+title: "R package investigation"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{R package investigation}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+### Setup environment  
+```{r setup}
+library(AusCropSuitR)
+```
+
+## Preface  
+
+This document is a wandering guide to other ecological models writen in R and 
+available predominantly on github or referenced by [EcoCommons](https://www.ecocommons.org.au/).
+Many of these packages were also found via [R-universe](https://r-universe.dev/search).  
+
+## dismo  
+
+This package is the R implementation of BioClim and contains extra features.
+Educational material on this package can be found at the following locations.  
+
+ Github: https://github.com/rspatial/dismo  
+ EcoCommons: https://support.ecocommons.org.au/support/solutions/articles/6000254285-bioclim  
+ r-universe: https://rspatial.r-universe.dev/dismo  
+ 
+
+ 
