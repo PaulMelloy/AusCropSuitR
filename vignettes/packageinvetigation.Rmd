@@ -35,5 +35,99 @@ Educational material on this package can be found at the following locations.
  EcoCommons: https://support.ecocommons.org.au/support/solutions/articles/6000254285-bioclim  
  r-universe: https://rspatial.r-universe.dev/dismo  
  
+```{r dismo-install}
+install.packages('dismo', repos='https://rspatial.r-universe.dev')
+library(dismo)
+```
 
+```{r}
+logo <- stack(system.file("external/rlogo.grd", package="raster"))
+#presence data
+pts <- matrix(c(48.243420, 48.243420, 47.985820, 52.880230, 49.531423, 46.182616, 54.168232, 
+  69.624263, 83.792291, 85.337894, 74.261072, 83.792291, 95.126713, 84.565092, 66.275456, 41.803408,
+  25.832176, 3.936132, 18.876962, 17.331359,7.048974, 13.648543, 26.093446, 28.544714, 39.104026, 
+  44.572240, 51.171810, 56.262906, 46.269272, 38.161230, 30.618865, 21.945145, 34.390047, 59.656971,
+  69.839163, 73.233228, 63.239594, 45.892154, 43.252326, 28.356155) , ncol=2)
+bc <- bioclim(logo, pts)
+
+#or
+v <- extract(logo, pts)
+bc <- bioclim(v)
+p1 <- predict(logo, bc)
+p2 <- predict(logo, bc, tails=c('both', 'low', 'high'))
+
+#or
+#sp <- SpatialPoints(pts)
+#bc <- bioclim(logo, pts)
+
+plot(p1)
+plot(p2)
+vignette('sdm', 'dismo')
+```
  
+
+```{r}
+library(jsonlite)
+library(httr)
+#library(htmltidy)
+library(XML)
+library(xml2)
+#devtools::install_github("hrbrmstr/jsonview")
+library(jsonview)
+
+
+# Get the raw json from the Providers endpoint
+rawJson <- content(GET('https://esoil.io/TERNLandscapes/SoilDataFederatoR/SoilDataAPI/DataSets'), "text")
+
+# View the raw json data
+json_view(rawJson)
+json_tree_view(rawJson)
+
+# Get the raw json from the Providers endpoint and create a dataframe - This is probably the best way to use the SoilDataFederator endpoint in R
+df <- fromJSON('https://esoil.io/TERNLandscapes/SoilDataFederatoR/SoilDataAPI/DataSets')
+head(df)
+
+# Get the Providers data as XML
+rawXML <- content(GET('https://esoil.io/TERNLandscapes/SoilDataFederatoR/SoilDataAPI/DataSets?format=xml'), "text")
+
+xml_view(rawXML)
+
+# Get the Providers data as XML and create a dataframe
+doc<-xmlParse(rawXML)
+xmldf <- xmlToDataFrame(nodes = getNodeSet(doc, "//DataSetsRecord"))
+head(xmldf)
+
+# Get the Providers data as a CSV file
+csvf <- tempfile()
+download.file('https://esoil.io/TERNLandscapes/SoilDataFederatoR/SoilDataAPI/DataSets?format=csv', csvf, mode="wb", quiet = T)
+df <- read.csv(csvf)
+head(df)
+unlink(csvf)
+
+
+
+
+# get the soil property groups from the PropertyGroups endpoint
+url <- 'https://esoil.io/TERNLandscapes/SoilDataFederatoR/SoilDataAPI/Properties'
+df <- fromJSON(url)
+head(df, 20)
+
+
+
+# get the soil property groups from the PropertyGroups endpoint
+url <- 'https://esoil.io/TERNLandscapes/SoilDataFederatoR/SoilDataAPI/PropertyGroups'
+df <- fromJSON(url)
+head(df)
+
+
+
+
+# get the soil property data from the SoilData endpoint
+url <- 'https://esoil.io/TERNLandscapes/SoilDataFederatoR/SoilDataAPI/SoilData?observedProperty=3A1&DataSet=TasGovernment'
+df <- fromJSON(url)
+head(df)
+```
+
+
+
+
